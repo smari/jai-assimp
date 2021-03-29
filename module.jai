@@ -86,8 +86,35 @@ aiMetadataEntry :: struct {
 
 aiMetadata :: struct {
     mNumProperties  : u32;
-    mKeys           : []aiString;
-    mValues         : []aiMetadataEntry;
+    mKeys           : *aiString;
+    mValues         : *aiMetadataEntry;
+}
+
+to_string :: (t: aiMetadataEntry) -> string {
+    using t;
+    if mType == {
+        case .AI_BOOL; 
+            if << cast(*bool)mData == true {
+                return "True";
+            } else {
+                return "False";
+            }
+        case .AI_INT32;
+            return tprint("%", <<cast(*s32)mData);
+        case .AI_UINT64;
+            return tprint("%", <<cast(*u64)mData);
+        case .AI_FLOAT;
+            return tprint("%", <<cast(*float32)mData);
+        case .AI_DOUBLE;
+            return tprint("%", <<cast(*float64)mData);
+        case .AI_AISTRING;
+            return tprint("%", to_string(cast(*aiString)mData));
+        case .AI_AIVECTOR3D;
+            return tprint("{%, %, %}", (cast(*aiVector3D)mData).x, (cast(*aiVector3D)mData).y, (cast(*aiVector3D)mData).z);
+        case;
+            return "Unknown";
+        
+    }
 }
 
 aiNode :: struct {
@@ -295,4 +322,5 @@ aiGetErrorString :: () -> *u8 #foreign assimp;
 
 #scope_file
 #import "Math";
+#import "Basic";
 assimp :: #foreign_system_library "libassimp";
