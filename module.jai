@@ -317,8 +317,9 @@ aiCamera :: struct {
     mAspect         : float32;
 }
 
-aiImportFile :: (pFile: *u8, pFlags: u32) -> *aiScene #foreign assimp;
+aiImportFile     :: (pFile: *u8, pFlags: u32) -> *aiScene #foreign assimp;
 aiGetErrorString :: () -> *u8 #foreign assimp;
+aiReleaseImport  :: (pScene: *aiScene) #foreign assimp;
 
 #scope_file
 #import "Math";
